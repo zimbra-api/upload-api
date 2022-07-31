@@ -88,7 +88,9 @@ class Request
      */
     public function setFiles(array $files = []): self
     {
-        $this->files = array_filter($files, static fn ($file) => $file instanceof \SplFileInfo);
+        $this->files = array_filter(
+            $files, static fn ($file) => ($file instanceof \SplFileInfo && $file->isFile())
+        );
         return $this;
     }
 
