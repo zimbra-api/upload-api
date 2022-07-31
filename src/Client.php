@@ -31,9 +31,9 @@ use Psr\Http\Message\{
  */
 class Client implements LoggerAwareInterface
 {
+    const ACCOUNT_AUTH_TOKEN     = 'ZM_AUTH_TOKEN';
+    const ADMIN_AUTH_TOKEN       = 'ZM_ADMIN_AUTH_TOKEN';
     const MULTIPART_CONTENT_TYPE = 'multipart/form-data; boundary = "{boundary}"';
-    const ZM_ADMIN_AUTH_TOKEN    = 'ZM_ADMIN_AUTH_TOKEN';
-    const ZM_AUTH_TOKEN          = 'ZM_AUTH_TOKEN';
     const QUERY_FORMAT           = 'raw,extended';
     const REQUEST_METHOD         = 'POST';
     const REQUIRED_FILE_MESSAGE  = 'Upload request must have at least one file.';
@@ -109,7 +109,7 @@ class Client implements LoggerAwareInterface
     {
         $this->uploadUrl = trim($uploadUrl);
         $this->authTokenCookie = strtr('{name}={authToken}', [
-            '{name}' => $isAdmin ? self::ZM_ADMIN_AUTH_TOKEN : self::ZM_AUTH_TOKEN,
+            '{name}' => $isAdmin ? self::ADMIN_AUTH_TOKEN : self::ACCOUNT_AUTH_TOKEN,
             '{authToken}' => trim($authToken),
         ]);
 
