@@ -16,7 +16,7 @@ namespace Zimbra\Upload;
  * @package   Zimbra
  * @category  Upload
  * @author    Nguyen Van Nguyen - nguyennv1981@gmail.com
- * @copyright Copyright © 2022-present by Nguyen Van Nguyen.
+ * @copyright Copyright © 2016-present by Nguyen Van Nguyen.
  */
 class Attactment
 {
