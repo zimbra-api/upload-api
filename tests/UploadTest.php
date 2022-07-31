@@ -6,6 +6,13 @@ use Http\Mock\Client as MockClient;
 use Http\Discovery\HttpClientDiscovery;
 use Http\Discovery\Strategy\MockClientStrategy;
 
+use Psr\Log\LoggerInterface;
+use Psr\Http\Client\ClientInterface;
+use Psr\Http\Message\{
+    RequestInterface,
+    ResponseInterface
+};
+
 use Zimbra\Upload\Attactment;
 use Zimbra\Upload\Client;
 use Zimbra\Upload\Request;
@@ -63,9 +70,11 @@ class UploadTest extends ZimbraTestCase
         $request = new Request([$file1, $file2], $requestId);
 
         $client = new Client($uploadUrl, $authToken);
-        // $this->assertSame($location, $client->getLocation());
-        // $this->assertSame($authToken, $client->getAuthToken());
-        // $this->assertTrue($client->hasHeader('Method'));
-        // $this->assertTrue($client->hasHeader('User-Agent'));
+        $attactments = $client->upload($request);
+
+        $this->assertInstanceOf(LoggerInterface::class, $client->getLogger());
+        $this->assertInstanceOf(ClientInterface::class, $client->getHttpClient());
+        $this->assertInstanceOf(RequestInterface::class, $client->getHttpRequest());
+        $this->assertInstanceOf(ResponseInterface::class, $client->getHttpResponse());
     }
 }

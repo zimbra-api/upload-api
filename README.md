@@ -1,5 +1,5 @@
-Zimbra Upload Api
-=================
+Zimbra Upload
+=============
 Zimbra Upload provides wrapper for the zimbra upload client.
 
 ## Basic usage of `zimbra` upload client
@@ -27,15 +27,16 @@ $authToken = $auth->getAuthToken();
 ```
 
 ## Installation
-
-This package can be installed easily using `Composer <http://getcomposer.org>`.
-Simply add the following to the composer.json file at the root of your project:
+Via Composer
+```bash
+$ composer require zimbra-api/upload-api
+```
+or just add it to your `composer.json` file directly.
 
 ```javascript
 {
     "require": {
-        "zimbra-api/upload": "*"
+        "zimbra-api/upload-api": "*"
     }
 }
 ```
-Then install your dependencies using ``composer.phar install``.
