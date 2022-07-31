@@ -2,23 +2,18 @@
 
 namespace Zimbra\Tests;
 
-use Http\Mock\Client as MockClient;
 use Http\Discovery\HttpClientDiscovery;
 use Http\Discovery\Strategy\{
     DiscoveryStrategy,
     MockClientStrategy
 };
-
 use Psr\Log\LoggerInterface;
 use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\{
     RequestInterface,
     ResponseInterface
 };
-
-use Zimbra\Upload\Attactment;
-use Zimbra\Upload\Client;
-use Zimbra\Upload\Request;
+use Zimbra\Upload\{Attactment, Client, Request};
 
 /**
  * Testcase class for upload client.
