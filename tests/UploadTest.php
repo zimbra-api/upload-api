@@ -32,11 +32,13 @@ class UploadTest extends ZimbraTestCase
         $attachmentId = $this->faker->uuid;
         $fileName = $this->faker->word;
         $contentType = $this->faker->mimeType;
+        $size = $this->faker->randomNumber;
 
-        $attactment = new Attactment($attachmentId, $fileName, $contentType);
+        $attactment = new Attactment($attachmentId, $fileName, $contentType, $size);
         $this->assertSame($attachmentId, $attactment->getAttachmentId());
         $this->assertSame($fileName, $attactment->getFileName());
         $this->assertSame($contentType, $attactment->getContentType());
+        $this->assertSame($size, $attactment->getSize());
     }
 
     public function testRequest()

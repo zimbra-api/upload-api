@@ -39,24 +39,32 @@ class Attactment
     private string $contentType;
 
     /**
+     * Size
+     * @var int
+     */
+    private int $size;
+
+    /**
      * Constructor method for Attactment
      *
      * @param  string $attachmentId
      * @param  string $fileName
      * @param  string $contentType
+     * @param  int $size
      * @return self
      */
     public function __construct(
-        string $attachmentId = '', string $fileName = '', string $contentType = ''
+        string $attachmentId = '', string $fileName = '', string $contentType = '', int $size = 0
     )
     {
         $this->attachmentId = $attachmentId;
         $this->fileName = $fileName;
         $this->contentType = $contentType;
+        $this->size = $size;
     }
 
     /**
-     * Gets attachment id
+     * Get attachment id
      *
      * @return string
      */
@@ -66,7 +74,7 @@ class Attactment
     }
 
     /**
-     * Gets file name
+     * Get file name
      *
      * @return string
      */
@@ -76,12 +84,22 @@ class Attactment
     }
 
     /**
-     * Gets content type
+     * Get content type
      *
      * @return string
      */
     public function getContentType(): string
     {
         return $this->contentType;
+    }
+
+    /**
+     * Get size
+     *
+     * @return int
+     */
+    public function getSize(): int
+    {
+        return $this->size;
     }
 }

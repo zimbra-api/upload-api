@@ -133,14 +133,16 @@ class Client implements LoggerAwareInterface
                         $attachmentId = $object->aid ?? '';
                         $fileName = $object->filename ?? '';
                         $contentType = $object->ct ?? '';
-                        return new Attactment($attachmentId, $fileName, $contentType);
+                        $size = $object->s ?? 0;
+                        return new Attactment($attachmentId, $fileName, $contentType, $size);
                     }, $data);
                 }
                 else {
                     $attachmentId = $data->aid ?? '';
                     $fileName = $data->filename ?? '';
                     $contentType = $data->ct ?? '';
-                    $attactments[] = new Attactment($attachmentId, $fileName, $contentType);
+                    $size = $data->s ?? 0;
+                    $attactments[] = new Attactment($attachmentId, $fileName, $contentType, $size);
                 }
             }
         }
