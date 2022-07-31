@@ -45,7 +45,7 @@ require_once 'vendor/autoload.php';
 
 use Zimbra\Account\AccountApi;
 
-$api = new AccountApi('https://localhost/service/soap');
+$api = new AccountApi('https://server.zimbra/service/soap');
 $auth = $api->authByName('username', 'password');
 $authToken = $auth->getAuthToken();
 ```
