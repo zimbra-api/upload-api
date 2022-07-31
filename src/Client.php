@@ -202,7 +202,7 @@ class Client implements LoggerAwareInterface
     public function getLogger(): LoggerInterface
     {
         if (!($this->logger instanceof LoggerInterface)) {
-            $this->logger = new NullLogger();
+            $this->setLogger(new NullLogger());
         }
         return $this->logger;
     }
