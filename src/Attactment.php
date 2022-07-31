@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * This file is part of the Zimbra API in PHP library.
  *
@@ -11,12 +11,12 @@
 namespace Zimbra\Upload;
 
 /**
- * Upload attactment class in Zimbra API PHP.
+ * Attactment class in Zimbra Upload API.
  * 
  * @package   Zimbra
  * @category  Upload
  * @author    Nguyen Van Nguyen - nguyennv1981@gmail.com
- * @copyright Copyright © 2013 by Nguyen Van Nguyen.
+ * @copyright Copyright © 2022-present by Nguyen Van Nguyen.
  */
 class Attactment
 {
@@ -24,19 +24,19 @@ class Attactment
      * Attachment id
      * @var string
      */
-    private $_attachmentId;
+    private string $attachmentId;
 
     /**
      * File name
      * @var string
      */
-    private $_fileName;
+    private string $fileName;
 
     /**
      * Content type
      * @var string
      */
-    private $_contentType;
+    private string $contentType;
 
     /**
      * Constructor method for Attactment
@@ -46,11 +46,13 @@ class Attactment
      * @param  string $contentType
      * @return self
      */
-    public function __construct($attachmentId, $fileName, $contentType)
+    public function __construct(
+        string $attachmentId = '', string $fileName = '', string $contentType = ''
+    )
     {
-        $this->_attachmentId = $attachmentId;
-        $this->_fileName = $fileName;
-        $this->_contentType = $contentType;
+        $this->attachmentId = $attachmentId;
+        $this->fileName = $fileName;
+        $this->contentType = $contentType;
     }
 
     /**
@@ -58,9 +60,9 @@ class Attactment
      *
      * @return string
      */
-    public function getAttachmentId()
+    public function getAttachmentId(): string
     {
-        return $this->_attachmentId;
+        return $this->attachmentId;
     }
 
     /**
@@ -68,9 +70,9 @@ class Attactment
      *
      * @return string
      */
-    public function getFileName()
+    public function getFileName(): string
     {
-        return $this->_fileName;
+        return $this->fileName;
     }
 
     /**
@@ -78,8 +80,8 @@ class Attactment
      *
      * @return string
      */
-    public function getContentType()
+    public function getContentType(): string
     {
-        return $this->_contentType;
+        return $this->contentType;
     }
 }

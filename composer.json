@@ -1,9 +1,9 @@
 {
-    "name": "zimbra-api/upload",
-    "homepage": "https://github.com/zimbra-api",
-    "description": "Upload client used by Zimbra Api",
-    "keywords": ["upload"],
-    "license": "BSD (3-Clause) License",
+    "name": "zimbra-api/upload-api",
+    "type": "library",
+    "description": "PHP wrapper library around the Zimbra upload service",
+    "keywords": ["library", "upload client", "Zimbra upload"],
+    "license": "BSD-3-Clause",
     "authors": [
         {
             "name": "Nguyen Van Nguyen",
@@ -12,20 +12,25 @@
         }
     ],
     "require": {
-        "php": ">=5.4.0",
-        "evenement/evenement": "~2.0",
-        "guzzlehttp/guzzle": "5.*",
-        "phpcollection/phpcollection": "0.*"
+        "php": ">=7.4",
+        "php-http/multipart-stream-builder": "^1.0",
+        "psr/http-client": "^1.0",
+        "psr/log": "^1.0"
     },
     "require-dev": {
-        "phpunit/phpunit": "~4.0",
-        "fzaninotto/faker": "~v1.5.0"
+        "php-http/mock-client": "^1.0",
+        "phpunit/phpunit": "^9.0",
+        "fakerphp/faker": "^1.0"
     },
     "autoload": {
-        "psr-4": { "Zimbra\\Upload\\": "" },
-        "exclude-from-classmap": [
-            "/Tests/"
-        ]
+        "psr-4": {
+            "Zimbra\\Upload\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Zimbra\\Tests\\": "tests/"
+        }
     },
     "extra": {
         "branch-alias": {
