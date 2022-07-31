@@ -4,7 +4,10 @@ namespace Zimbra\Tests;
 
 use Http\Mock\Client as MockClient;
 use Http\Discovery\HttpClientDiscovery;
-use Http\Discovery\Strategy\MockClientStrategy;
+use Http\Discovery\Strategy\{
+    DiscoveryStrategy,
+    MockClientStrategy
+};
 
 use Psr\Log\LoggerInterface;
 use Psr\Http\Client\ClientInterface;

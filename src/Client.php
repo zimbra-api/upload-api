@@ -122,7 +122,7 @@ class Client implements LoggerAwareInterface
     {
         $attactments = [];
         if($this->httpResponse instanceof ResponseInterface) {
-            $body = $response->getBody()->getContents();
+            $body = $this->httpResponse->getBody()->getContents();
             $this->getLogger()->debug('Response body', ['body' => $body]);
             preg_match('/\[\{(.*)\}\]/', $body, $matches, PREG_OFFSET_CAPTURE, 3);
             $match = $matches[0][0] ?? FALSE;
@@ -155,7 +155,7 @@ class Client implements LoggerAwareInterface
      */
     public function upload(Request $request): array
     {
-        if (empty($this->request->getFiles())) {
+        if (empty($request->getFiles())) {
             throw new \UnexpectedValueException(
                 self::REQUIRED_FILE_MESSAGE
             );

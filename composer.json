@@ -18,9 +18,10 @@
         "psr/log": "^1.0"
     },
     "require-dev": {
+        "fakerphp/faker": "^1.0",
+        "nyholm/psr7": "^1.0",
         "php-http/mock-client": "^1.0",
-        "phpunit/phpunit": "^9.0",
-        "fakerphp/faker": "^1.0"
+        "phpunit/phpunit": "^9.0"
     },
     "autoload": {
         "psr-4": {
