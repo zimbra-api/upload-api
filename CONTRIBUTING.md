@@ -11,5 +11,3 @@ If you've added something new please create a new unit test, if you've changed s
 We're trying to ensure there is **100%** test code coverage (including testing PHP errors and exceptions) so please ensure any new/updated tests cover all of your changes.
 
 Thank you,
-
-@alexbilbie
