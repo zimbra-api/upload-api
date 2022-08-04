@@ -16,7 +16,7 @@ use Http\Discovery\{
 };
 use Http\Message\MultipartStream\MultipartStreamBuilder;
 use Psr\Log\{LoggerAwareInterface, LoggerInterface, NullLogger};
-use Psr\Http\Client\{ClientExceptionInterface, ClientInterface};
+use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\{
     RequestFactoryInterface, RequestInterface, ResponseInterface, StreamFactoryInterface
 };
@@ -184,13 +184,7 @@ class Client implements LoggerAwareInterface
             ->withHeader('Content-Type', strtr(self::MULTIPART_CONTENT_TYPE, [
                 '{boundary}' => $builder->getBoundary(),
             ]));
-
-        try {
-            $this->httpResponse = $this->httpClient->sendRequest($this->httpRequest);
-        }
-        catch (ClientExceptionInterface $ex) {
-            throw $ex;
-        }
+        $this->httpResponse = $this->httpClient->sendRequest($this->httpRequest);
         return $this->parseResponse();
     }
 
