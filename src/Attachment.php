@@ -11,14 +11,14 @@
 namespace Zimbra\Upload;
 
 /**
- * Attactment class in Zimbra Upload API.
+ * Attachment class in Zimbra Upload API.
  * 
  * @package   Zimbra
  * @category  Upload
  * @author    Nguyen Van Nguyen - nguyennv1981@gmail.com
  * @copyright Copyright © 2016-present by Nguyen Van Nguyen.
  */
-class Attactment
+class Attachment
 {
     /**
      * Attachment id
@@ -45,7 +45,7 @@ class Attactment
     private int $size;
 
     /**
-     * Constructor method for Attactment
+     * Constructor method for Attachment
      *
      * @param  string $attachmentId
      * @param  string $fileName

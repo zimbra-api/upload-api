@@ -14,7 +14,7 @@ use Psr\Http\Message\{
     ResponseInterface,
     UriInterface
 };
-use Zimbra\Upload\{Attactment, Client, Request};
+use Zimbra\Upload\{Attachment, Client, Request};
 
 /**
  * Testcase class for upload client.
@@ -28,18 +28,18 @@ class UploadTest extends ZimbraTestCase
         HttpClientDiscovery::prependStrategy(MockClientStrategy::class);
     }
 
-    public function testAttactment()
+    public function testAttachment()
     {
         $attachmentId = $this->faker->uuid;
         $fileName = $this->faker->word;
         $contentType = $this->faker->mimeType;
         $size = $this->faker->randomNumber;
 
-        $attactment = new Attactment($attachmentId, $fileName, $contentType, $size);
-        $this->assertSame($attachmentId, $attactment->getAttachmentId());
-        $this->assertSame($fileName, $attactment->getFileName());
-        $this->assertSame($contentType, $attactment->getContentType());
-        $this->assertSame($size, $attactment->getSize());
+        $attachment = new Attachment($attachmentId, $fileName, $contentType, $size);
+        $this->assertSame($attachmentId, $attachment->getAttachmentId());
+        $this->assertSame($fileName, $attachment->getFileName());
+        $this->assertSame($contentType, $attachment->getContentType());
+        $this->assertSame($size, $attachment->getSize());
     }
 
     public function testRequest()
