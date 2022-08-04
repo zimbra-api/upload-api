@@ -11,7 +11,8 @@ use Psr\Log\LoggerInterface;
 use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\{
     RequestInterface,
-    ResponseInterface
+    ResponseInterface,
+    UriInterface
 };
 use Zimbra\Upload\{Attactment, Client, Request};
 
@@ -70,11 +71,22 @@ class UploadTest extends ZimbraTestCase
         $request = new Request([$file1, $file2], $requestId);
 
         $client = new Client($uploadUrl, $authToken);
-        $attactments = $client->upload($request);
+        $client->upload($request);
+
+        $httpRequest = $client->getHttpRequest();
+        $this->assertInstanceOf(RequestInterface::class, $httpRequest);
+        $this->assertSame(Client::REQUEST_METHOD, $httpRequest->getMethod());
+        $this->assertStringStartsWith('ZM_AUTH_TOKEN', $httpRequest->getHeaderLine('Cookie'));
+        $this->assertStringEndsWith($authToken, $httpRequest->getHeaderLine('Cookie'));
+        $this->assertStringStartsWith('multipart/form-data', $httpRequest->getHeaderLine('Content-Type'));
+
+        $uri = $httpRequest->getUri();
+        $this->assertInstanceOf(UriInterface::class, $uri);
+        $this->assertSame(http_build_query(['fmt' => Client::QUERY_FORMAT]), $uri->getQuery());
+        $this->assertStringStartsWith($uploadUrl, $uri->__toString());
 
         $this->assertInstanceOf(LoggerInterface::class, $client->getLogger());
         $this->assertInstanceOf(ClientInterface::class, $client->getHttpClient());
-        $this->assertInstanceOf(RequestInterface::class, $client->getHttpRequest());
         $this->assertInstanceOf(ResponseInterface::class, $client->getHttpResponse());
     }
 }
