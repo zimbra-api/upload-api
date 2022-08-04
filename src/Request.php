@@ -10,6 +10,8 @@
 
 namespace Zimbra\Upload;
 
+use SplFileInfo;
+
 /**
  * Request class in Zimbra Upload API.
  * 
@@ -62,9 +64,9 @@ class Request
      * Set request id
      *
      * @param  string $requestId
-     * @return string
+     * @return self
      */
-    public function setRequestId(string $requestId)
+    public function setRequestId(string $requestId): self
     {
         $this->requestId = trim($requestId);
         return $this;
@@ -89,7 +91,7 @@ class Request
     public function setFiles(array $files = []): self
     {
         $this->files = array_filter(
-            $files, static fn ($file) => ($file instanceof \SplFileInfo && $file->isFile())
+            $files, static fn ($file) => ($file instanceof SplFileInfo && $file->isFile())
         );
         return $this;
     }
@@ -100,7 +102,7 @@ class Request
      * @param SplFileInfo $file
      * @return self
      */
-    public function addFile(\SplFileInfo $file)
+    public function addFile(SplFileInfo $file)
     {
         $this->files[] = $file;
         return $this;
