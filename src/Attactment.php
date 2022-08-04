@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 /**
- * This file is part of the Zimbra API in PHP library.
+ * This file is part of the Zimbra Upload API in PHP library.
  *
  * © Nguyen Van Nguyen <nguyennv1981@gmail.com>
  *
