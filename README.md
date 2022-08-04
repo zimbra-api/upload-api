@@ -23,7 +23,7 @@ or just add it to your `composer.json` file directly.
 }
 ```
 
-This library using [PSR-17: HTTP Factories](https://www.php-fig.org/psr/psr-17/), [PSR-18: HTTP Client](https://www.php-fig.org/psr/psr-18/) for creating multipart stream & sending HTTP requests to Zimbra Upload service. Make sure to install package(s) providing ["http client implementation"](https://packagist.org/providers/psr/http-client-implementation) & ["http factory implementation"](https://packagist.org/providers/psr/http-factory-implementation)
+This library using [PSR-17: HTTP Factories](https://www.php-fig.org/psr/psr-17/), [PSR-18: HTTP Client](https://www.php-fig.org/psr/psr-18/) for creating multipart stream & sending HTTP requests to Zimbra upload service. Make sure to install package(s) providing ["http client implementation"](https://packagist.org/providers/psr/http-client-implementation) & ["http factory implementation"](https://packagist.org/providers/psr/http-factory-implementation)
 
 ## Basic usage of `zimbra` upload client
 ```php
