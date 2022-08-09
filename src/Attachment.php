@@ -45,7 +45,7 @@ class Attachment
     private int $size;
 
     /**
-     * Constructor method for Attachment
+     * Constructor
      *
      * @param  string $attachmentId
      * @param  string $fileName

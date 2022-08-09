@@ -31,12 +31,14 @@ use Psr\Http\Message\{
  */
 class Client implements LoggerAwareInterface
 {
-    const ACCOUNT_AUTH_TOKEN     = 'ZM_AUTH_TOKEN';
-    const ADMIN_AUTH_TOKEN       = 'ZM_ADMIN_AUTH_TOKEN';
-    const MULTIPART_CONTENT_TYPE = 'multipart/form-data; boundary = "{boundary}"';
-    const QUERY_FORMAT           = 'raw,extended';
-    const REQUEST_METHOD         = 'POST';
-    const REQUIRED_FILE_MESSAGE  = 'Upload request must have at least one file.';
+    protected const ACCOUNT_AUTH_TOKEN     = 'ZM_AUTH_TOKEN';
+    protected const ADMIN_AUTH_TOKEN       = 'ZM_ADMIN_AUTH_TOKEN';
+    protected const MULTIPART_CONTENT_TYPE = 'multipart/form-data; boundary = "{boundary}"';
+    protected const QUERY_FORMAT           = 'raw,extended';
+    protected const REQUEST_METHOD         = 'POST';
+    protected const REQUIRED_FILE_MESSAGE  = 'Upload request must have at least one file.';
+    protected const RESPONSE_BODY_MESSAGE  = 'Response body from Zimbra';
+    protected const UPLOAD_FILE_MESSAGE    = 'Upload file to Zimbra';
 
     /**
      * Upload url
@@ -123,7 +125,7 @@ class Client implements LoggerAwareInterface
         $attactments = [];
         if($this->httpResponse instanceof ResponseInterface) {
             $body = $this->httpResponse->getBody()->getContents();
-            $this->getLogger()->debug('Response body', ['body' => $body]);
+            $this->getLogger()->debug(self::RESPONSE_BODY_MESSAGE, ['body' => $body]);
             preg_match('/\[\{(.*)\}\]/', $body, $matches, PREG_OFFSET_CAPTURE, 3);
             $match = $matches[0][0] ?? FALSE;
             if (!empty($match)) {
@@ -173,7 +175,7 @@ class Client implements LoggerAwareInterface
             $builder->addResource($file->getFilename(), fopen($file->getRealPath(), 'r'), [
                 'filename' => $file->getFilename(),
             ]);
-            $this->getLogger()->debug('Upload file', ['file' => $file->getRealPath()]);
+            $this->getLogger()->debug(self::UPLOAD_FILE_MESSAGE, ['file' => $file->getRealPath()]);
         }
 
         $uploadUrl = $this->uploadUrl . '?' . http_build_query(['fmt' => self::QUERY_FORMAT]);
@@ -189,7 +191,7 @@ class Client implements LoggerAwareInterface
     }
 
     /**
-     * Get the logger.
+     * Get the logger
      *
      * @return LoggerInterface
      */
@@ -202,7 +204,7 @@ class Client implements LoggerAwareInterface
     }
 
     /**
-     * Set the logger.
+     * Set the logger
      *
      * @param LoggerInterface $logger
      * @return self
@@ -224,7 +226,7 @@ class Client implements LoggerAwareInterface
     }
 
     /**
-     * Get http request.
+     * Get http request
      *
      * @return RequestInterface
      */
@@ -234,7 +236,7 @@ class Client implements LoggerAwareInterface
     }
 
     /**
-     * Get http response.
+     * Get http response
      *
      * @return ResponseInterface
      */
