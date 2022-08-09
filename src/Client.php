@@ -31,14 +31,14 @@ use Psr\Http\Message\{
  */
 class Client implements LoggerAwareInterface
 {
-    protected const ACCOUNT_AUTH_TOKEN     = 'ZM_AUTH_TOKEN';
-    protected const ADMIN_AUTH_TOKEN       = 'ZM_ADMIN_AUTH_TOKEN';
-    protected const MULTIPART_CONTENT_TYPE = 'multipart/form-data; boundary = "{boundary}"';
-    protected const QUERY_FORMAT           = 'raw,extended';
-    protected const REQUEST_METHOD         = 'POST';
-    protected const REQUIRED_FILE_MESSAGE  = 'Upload request must have at least one file.';
-    protected const RESPONSE_BODY_MESSAGE  = 'Response body from Zimbra';
-    protected const UPLOAD_FILE_MESSAGE    = 'Upload file to Zimbra';
+    const ACCOUNT_AUTH_TOKEN     = 'ZM_AUTH_TOKEN';
+    const ADMIN_AUTH_TOKEN       = 'ZM_ADMIN_AUTH_TOKEN';
+    const MULTIPART_CONTENT_TYPE = 'multipart/form-data; boundary = "{boundary}"';
+    const QUERY_FORMAT           = 'raw,extended';
+    const REQUEST_METHOD         = 'POST';
+    const REQUIRED_FILE_MESSAGE  = 'Upload request must have at least one file.';
+    const RESPONSE_BODY_MESSAGE  = 'Response body from Zimbra';
+    const UPLOAD_FILE_MESSAGE    = 'Upload file to Zimbra';
 
     /**
      * Upload url
