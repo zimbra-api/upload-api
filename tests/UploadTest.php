@@ -12,6 +12,7 @@ use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\{
     RequestInterface,
     ResponseInterface,
+    StreamInterface,
     UriInterface
 };
 use Zimbra\Upload\{Attachment, Client, Request};
@@ -26,6 +27,16 @@ class UploadTest extends ZimbraTestCase
     {
         parent::setUp();
         HttpClientDiscovery::prependStrategy(MockClientStrategy::class);
+    }
+
+    protected function mockHttpResponse(string $contents): ResponseInterface
+    {
+        $stream = $this->createStub(StreamInterface::class);
+        $stream->method('getContents')->willReturn($contents);
+        $response = $this->createStub(ResponseInterface::class);
+        $response->method('getBody')->willReturn($stream);
+        $response->method('getStatusCode')->willReturn(200);
+        return $response;
     }
 
     public function testAttachment()
@@ -66,12 +77,32 @@ class UploadTest extends ZimbraTestCase
         $authToken = $this->faker->sha256;
         $requestId = $this->faker->uuid;
 
+        $attachmentId = $this->faker->uuid;
+        $fileName = $this->faker->word;
+        $contentType = $this->faker->mimeType;
+        $size = $this->faker->randomNumber;
+        $attachment = new Attachment($attachmentId, $fileName, $contentType, $size);
+        $responseContent = strtr('200,"{requestId}",[{"aid":"{attachmentId}","ct":"{contentType}","filename":"{fileName}","s":{size}}]', [
+            '{requestId}' => $requestId,
+            '{attachmentId}' => $attachmentId,
+            '{contentType}' => $contentType,
+            '{fileName}' => $fileName,
+            '{size}' => $size,
+        ]);
+        $response = $this->mockHttpResponse($responseContent);
+
         $file1 = new \SplFileInfo(tempnam(sys_get_temp_dir(), $requestId));
         $file2 = new \SplFileInfo(tempnam(sys_get_temp_dir(), $requestId));
         $request = new Request([$file1, $file2], $requestId);
 
         $client = new Client($uploadUrl, $authToken);
-        $client->upload($request);
+        $httpClient = $client->getHttpClient();
+        $httpClient->setDefaultResponse($response);
+        $this->assertInstanceOf(ClientInterface::class, $httpClient);
+
+        $attachments = $client->upload($request);
+        $this->assertEquals([$attachment], $attachments);
+        $this->assertSame($response, $client->getHttpResponse());
 
         $httpRequest = $client->getHttpRequest();
         $this->assertInstanceOf(RequestInterface::class, $httpRequest);
@@ -86,7 +117,5 @@ class UploadTest extends ZimbraTestCase
         $this->assertStringStartsWith($uploadUrl, $uri->__toString());
 
         $this->assertInstanceOf(LoggerInterface::class, $client->getLogger());
-        $this->assertInstanceOf(ClientInterface::class, $client->getHttpClient());
-        $this->assertInstanceOf(ResponseInterface::class, $client->getHttpResponse());
     }
 }
