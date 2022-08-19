@@ -44,6 +44,30 @@ class Client implements LoggerAwareInterface
     const UPLOAD_FILE_MESSAGE    = 'Upload file to Zimbra';
 
     /**
+     * @var array
+     */
+    private static $originatingIpHeaders = [
+        'Client-Ip',
+        'Forwarded-For',
+        'X-Client-Ip',
+        'X-Forwarded-For',
+    ];
+
+    /**
+     * @var array
+     */
+    private static $serverOriginatingIpHeaders = [
+        'HTTP_CLIENT_IP',
+        'HTTP_FORWARDED',
+        'HTTP_FORWARDED_FOR',
+        'HTTP_X_CLIENT_IP',
+        'HTTP_X_CLUSTER_CLIENT_IP',
+        'HTTP_X_FORWARDED',
+        'HTTP_X_FORWARDED_FOR',
+        'REMOTE_ADDR',
+    ];
+
+    /**
      * Upload url
      * 
      * @var string
@@ -180,6 +204,11 @@ class Client implements LoggerAwareInterface
             ->withBody($builder->build())
             ->withHeader('Cookie', $this->authTokenCookie)
             ->withHeader('Content-Type', sprintf(self::MULTIPART_CONTENT_TYPE, $builder->getBoundary()));
+        if (!empty(self::getOriginatingIp())) {
+            foreach (self::$originatingIpHeaders as $header) {
+                $this->httpRequest = $this->httpRequest->withHeader($header, self::getOriginatingIp());
+            }
+        }
         $this->httpResponse = $this->httpClient->sendRequest($this->httpRequest);
         return $this->parseResponse();
     }
@@ -225,5 +254,24 @@ class Client implements LoggerAwareInterface
     public function getHttpResponse(): ?ResponseInterface
     {
         return $this->httpResponse;
+    }
+
+    private static function getOriginatingIp(): ?string
+    {
+        static $ip = NULL;
+        if (empty($ip) && !empty($_SERVER)) {
+            foreach(self::$serverOriginatingIpHeaders as $header) {
+                if (!empty($_SERVER[$header])) {
+                    $ip = $_SERVER[$header];
+
+                    // Some proxies typically list the whole chain of IP
+                    // addresses through which the client has reached us.
+                    // e.g. client_ip, proxy_ip1, proxy_ip2, etc.
+                    sscanf($ip, '%[^,]', $ip);
+                    break;
+                }
+            }
+        }
+        return $ip;
     }
 }
