@@ -35,6 +35,7 @@ class Client implements LoggerAwareInterface
 
     const ACCOUNT_AUTH_TOKEN     = 'ZM_AUTH_TOKEN';
     const ADMIN_AUTH_TOKEN       = 'ZM_ADMIN_AUTH_TOKEN';
+    const HTTP_USER_AGENT        = 'PHP-Zimbra-Upload-Client';
     const MULTIPART_CONTENT_TYPE = 'multipart/form-data; boundary = "%s"';
     const QUERY_FORMAT           = 'raw,extended';
     const REQUEST_METHOD         = 'POST';
@@ -203,7 +204,8 @@ class Client implements LoggerAwareInterface
             ->createRequest(self::REQUEST_METHOD, $uploadUrl)
             ->withBody($builder->build())
             ->withHeader('Cookie', $this->authTokenCookie)
-            ->withHeader('Content-Type', sprintf(self::MULTIPART_CONTENT_TYPE, $builder->getBoundary()));
+            ->withHeader('Content-Type', sprintf(self::MULTIPART_CONTENT_TYPE, $builder->getBoundary()))
+            ->withHeader('User-Agent', $_SERVER['HTTP_USER_AGENT'] ?? self::HTTP_USER_AGENT);
         if (!empty(self::getOriginatingIp())) {
             foreach (self::$originatingIpHeaders as $header) {
                 $this->httpRequest = $this->httpRequest->withHeader($header, self::getOriginatingIp());
