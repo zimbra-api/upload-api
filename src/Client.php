@@ -15,7 +15,7 @@ use Http\Discovery\{
     Psr18ClientDiscovery
 };
 use Http\Message\MultipartStream\MultipartStreamBuilder;
-use Psr\Log\{LoggerAwareInterface, LoggerInterface, NullLogger};
+use Psr\Log\{LoggerAwareInterface, LoggerAwareTrait, LoggerInterface, NullLogger};
 use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\{
     RequestFactoryInterface, RequestInterface, ResponseInterface, StreamFactoryInterface
@@ -31,13 +31,16 @@ use Psr\Http\Message\{
  */
 class Client implements LoggerAwareInterface
 {
+    use LoggerAwareTrait;
+
     const ACCOUNT_AUTH_TOKEN     = 'ZM_AUTH_TOKEN';
     const ADMIN_AUTH_TOKEN       = 'ZM_ADMIN_AUTH_TOKEN';
-    const MULTIPART_CONTENT_TYPE = 'multipart/form-data; boundary = "{boundary}"';
+    const MULTIPART_CONTENT_TYPE = 'multipart/form-data; boundary = "%s"';
     const QUERY_FORMAT           = 'raw,extended';
     const REQUEST_METHOD         = 'POST';
     const REQUIRED_FILE_MESSAGE  = 'Upload request must have at least one file.';
     const RESPONSE_BODY_MESSAGE  = 'Response body from Zimbra';
+    const TEXT_CONTENT_TYPE      = 'text/plain';
     const UPLOAD_FILE_MESSAGE    = 'Upload file to Zimbra';
 
     /**
@@ -88,13 +91,6 @@ class Client implements LoggerAwareInterface
      * @var ResponseInterface
      */
     private ?ResponseInterface $httpResponse = NULL;
-
-    /**
-     * Logger
-     * 
-     * @var LoggerInterface
-     */
-    private ?LoggerInterface $logger = NULL;
 
     /**
      * Constructor
@@ -168,7 +164,7 @@ class Client implements LoggerAwareInterface
         $builder = new MultipartStreamBuilder($this->streamFactory);
         $builder->addResource('requestId', $request->getRequestId(), [
             'headers' => [
-                'Content-Type' => 'text/plain',
+                'Content-Type' => self::TEXT_CONTENT_TYPE,
             ]
         ]);
         foreach ($request->getFiles() as $file) {
@@ -183,9 +179,7 @@ class Client implements LoggerAwareInterface
             ->createRequest(self::REQUEST_METHOD, $uploadUrl)
             ->withBody($builder->build())
             ->withHeader('Cookie', $this->authTokenCookie)
-            ->withHeader('Content-Type', strtr(self::MULTIPART_CONTENT_TYPE, [
-                '{boundary}' => $builder->getBoundary(),
-            ]));
+            ->withHeader('Content-Type', sprintf(self::MULTIPART_CONTENT_TYPE, $builder->getBoundary()));
         $this->httpResponse = $this->httpClient->sendRequest($this->httpRequest);
         return $this->parseResponse();
     }
@@ -201,18 +195,6 @@ class Client implements LoggerAwareInterface
             $this->setLogger(new NullLogger());
         }
         return $this->logger;
-    }
-
-    /**
-     * Set the logger
-     *
-     * @param LoggerInterface $logger
-     * @return self
-     */
-    public function setLogger(LoggerInterface $logger): self
-    {
-        $this->logger = $logger;
-        return $this;
     }
 
     /**
