@@ -40,8 +40,8 @@ use Zimbra\Upload\Client;
 use Zimbra\Upload\Request;
 
 $file = new \SplFileInfo($filePath);
-$request = new Request([$file], $requestId);
-$client = new Client('https://zimbra.server/service/upload', $authToken);
+$request = new Request([$file], $requestId, $authToken);
+$client = new Client('https://zimbra.server/service/upload');
 $attachments = $client->upload($request);
 ```
 `$authToken` is user authentication token, it can obtain from zimbra soap api.
