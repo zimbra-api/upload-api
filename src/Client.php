@@ -118,9 +118,9 @@ class Client implements LoggerAwareInterface
      */
     public function __construct(
         string $uploadUrl = '',
-        ClientInterface $httpClient = NULL,
-        RequestFactoryInterface $requestFactory = NULL,
-        StreamFactoryInterface $streamFactory = NULL
+        ?ClientInterface $httpClient = NULL,
+        ?RequestFactoryInterface $requestFactory = NULL,
+        ?StreamFactoryInterface $streamFactory = NULL
     )
     {
         $this->uploadUrl = trim($uploadUrl);
