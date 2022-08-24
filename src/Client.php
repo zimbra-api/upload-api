@@ -123,11 +123,17 @@ class Client implements LoggerAwareInterface
      * @param string $uploadUrl
      * @param string $authToken
      * @param bool   $isAdmin
+     * @param ClientInterface $httpClient
+     * @param RequestFactoryInterface $requestFactory
+     * @param StreamFactoryInterface $streamFactory
      */
     public function __construct(
         string $uploadUrl = '',
         string $authToken = '',
-        bool $isAdmin = FALSE
+        bool $isAdmin = FALSE,
+        ClientInterface $httpClient = NULL,
+        RequestFactoryInterface $requestFactory = NULL,
+        StreamFactoryInterface $streamFactory = NULL
     )
     {
         $this->uploadUrl = trim($uploadUrl);
@@ -136,9 +142,9 @@ class Client implements LoggerAwareInterface
             '{authToken}' => trim($authToken),
         ]);
 
-        $this->httpClient = Psr18ClientDiscovery::find();
-        $this->requestFactory = Psr17FactoryDiscovery::findRequestFactory();
-        $this->streamFactory = Psr17FactoryDiscovery::findStreamFactory();
+        $this->httpClient = $httpClient ?: Psr18ClientDiscovery::find();
+        $this->requestFactory = $requestFactory ?: Psr17FactoryDiscovery::findRequestFactory();
+        $this->streamFactory = $streamFactory ?: Psr17FactoryDiscovery::findStreamFactory();
     }
 
     private function parseResponse(): array
