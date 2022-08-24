@@ -10,8 +10,6 @@
 
 namespace Zimbra\Upload;
 
-use SplFileInfo;
-
 /**
  * Request class in Zimbra Upload API.
  * 
@@ -22,11 +20,21 @@ use SplFileInfo;
  */
 class Request
 {
+    const ACCOUNT_AUTH_TOKEN = 'ZM_AUTH_TOKEN';
+    const ADMIN_AUTH_TOKEN   = 'ZM_ADMIN_AUTH_TOKEN';
+
     /**
      * Request id
      * @var string
      */
     private string $requestId;
+
+    /**
+     * Http auth token cookie
+     * 
+     * @var string
+     */
+    private string $authTokenCookie;
 
     /**
      * Upload files
@@ -39,12 +47,23 @@ class Request
      *
      * @param  array  $files
      * @param  string $requestId
+     * @param  string $authToken
+     * @param  bool   $isAdmin
      * @return self
      */
-    public function __construct(array $files = [], string $requestId = '')
+    public function __construct(
+        array $files = [],
+        string $requestId = '',
+        string $authToken = '',
+        bool $isAdmin = FALSE,
+    )
     {
         $this->setFiles($files)
              ->setRequestId($requestId);
+        $this->authTokenCookie = strtr('{name}={authToken}', [
+            '{name}' => $isAdmin ? self::ADMIN_AUTH_TOKEN : self::ACCOUNT_AUTH_TOKEN,
+            '{authToken}' => trim($authToken),
+        ]);
     }
 
     /**
@@ -73,6 +92,16 @@ class Request
     }
 
     /**
+     * Get auth token cookie
+     *
+     * @return string
+     */
+    public function getAuthTokenCookie(): string
+    {
+        return $this->authTokenCookie;
+    }
+
+    /**
      * Get files
      *
      * @return array
@@ -91,7 +120,7 @@ class Request
     public function setFiles(array $files = []): self
     {
         $this->files = array_filter(
-            $files, static fn ($file) => ($file instanceof SplFileInfo && $file->isFile())
+            $files, static fn ($file) => ($file instanceof \SplFileInfo && $file->isFile())
         );
         return $this;
     }
@@ -99,10 +128,10 @@ class Request
     /**
      * Add a file
      *
-     * @param SplFileInfo $file
+     * @param \SplFileInfo $file
      * @return self
      */
-    public function addFile(SplFileInfo $file)
+    public function addFile(\SplFileInfo $file)
     {
         $this->files[] = $file;
         return $this;

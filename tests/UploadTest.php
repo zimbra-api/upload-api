@@ -56,18 +56,21 @@ class UploadTest extends ZimbraTestCase
     public function testRequest()
     {
         $requestId = $this->faker->uuid;
+        $authToken = $this->faker->sha256;
         $file1 = new \SplFileInfo(tempnam(sys_get_temp_dir(), $requestId));
         $file2 = new \SplFileInfo(tempnam(sys_get_temp_dir(), $requestId));
 
-        $request = new Request([$file1], $requestId);
+        $request = new Request([$file1], $requestId, $authToken);
         $this->assertSame($requestId, $request->getRequestId());
+        $this->assertSame("ZM_AUTH_TOKEN=$authToken", $request->getAuthTokenCookie());
         $this->assertSame([$file1], $request->getFiles());
 
-        $request = new Request();
+        $request = new Request([], '', $authToken, TRUE);
         $request->setRequestId($requestId)
             ->setFiles([$file1])
             ->addFile($file2);
         $this->assertSame($requestId, $request->getRequestId());
+        $this->assertSame("ZM_ADMIN_AUTH_TOKEN=$authToken", $request->getAuthTokenCookie());
         $this->assertSame([$file1, $file2], $request->getFiles());
     }
 
@@ -93,9 +96,9 @@ class UploadTest extends ZimbraTestCase
 
         $file1 = new \SplFileInfo(tempnam(sys_get_temp_dir(), $requestId));
         $file2 = new \SplFileInfo(tempnam(sys_get_temp_dir(), $requestId));
-        $request = new Request([$file1, $file2], $requestId);
+        $request = new Request([$file1, $file2], $requestId, $authToken);
 
-        $client = new Client($uploadUrl, $authToken);
+        $client = new Client($uploadUrl);
         $httpClient = $client->getHttpClient();
         $httpClient->setDefaultResponse($response);
         $this->assertInstanceOf(ClientInterface::class, $httpClient);

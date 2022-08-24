@@ -33,8 +33,6 @@ class Client implements LoggerAwareInterface
 {
     use LoggerAwareTrait;
 
-    const ACCOUNT_AUTH_TOKEN     = 'ZM_AUTH_TOKEN';
-    const ADMIN_AUTH_TOKEN       = 'ZM_ADMIN_AUTH_TOKEN';
     const HTTP_USER_AGENT        = 'PHP-Zimbra-Upload-Client';
     const MULTIPART_CONTENT_TYPE = 'multipart/form-data; boundary = "%s"';
     const QUERY_FORMAT           = 'raw,extended';
@@ -76,13 +74,6 @@ class Client implements LoggerAwareInterface
     private string $uploadUrl;
 
     /**
-     * Http auth token cookie
-     * 
-     * @var string
-     */
-    private string $authTokenCookie;
-
-    /**
      * Http client
      * 
      * @var ClientInterface
@@ -121,27 +112,18 @@ class Client implements LoggerAwareInterface
      * Constructor
      *
      * @param string $uploadUrl
-     * @param string $authToken
-     * @param bool   $isAdmin
      * @param ClientInterface $httpClient
      * @param RequestFactoryInterface $requestFactory
      * @param StreamFactoryInterface $streamFactory
      */
     public function __construct(
         string $uploadUrl = '',
-        string $authToken = '',
-        bool $isAdmin = FALSE,
         ClientInterface $httpClient = NULL,
         RequestFactoryInterface $requestFactory = NULL,
         StreamFactoryInterface $streamFactory = NULL
     )
     {
         $this->uploadUrl = trim($uploadUrl);
-        $this->authTokenCookie = strtr('{name}={authToken}', [
-            '{name}' => $isAdmin ? self::ADMIN_AUTH_TOKEN : self::ACCOUNT_AUTH_TOKEN,
-            '{authToken}' => trim($authToken),
-        ]);
-
         $this->httpClient = $httpClient ?: Psr18ClientDiscovery::find();
         $this->requestFactory = $requestFactory ?: Psr17FactoryDiscovery::findRequestFactory();
         $this->streamFactory = $streamFactory ?: Psr17FactoryDiscovery::findStreamFactory();
@@ -209,7 +191,7 @@ class Client implements LoggerAwareInterface
         $this->httpRequest = $this->requestFactory
             ->createRequest(self::REQUEST_METHOD, $uploadUrl)
             ->withBody($builder->build())
-            ->withHeader('Cookie', $this->authTokenCookie)
+            ->withHeader('Cookie', $request->getAuthTokenCookie())
             ->withHeader('Content-Type', sprintf(self::MULTIPART_CONTENT_TYPE, $builder->getBoundary()))
             ->withHeader('User-Agent', $_SERVER['HTTP_USER_AGENT'] ?? self::HTTP_USER_AGENT);
         if (!empty(self::getOriginatingIp())) {
