@@ -24,23 +24,11 @@ class Request
     const ADMIN_AUTH_TOKEN   = 'ZM_ADMIN_AUTH_TOKEN';
 
     /**
-     * Request id
-     * @var string
-     */
-    private string $requestId;
-
-    /**
      * Http auth token cookie
      * 
      * @var string
      */
     private string $authTokenCookie;
-
-    /**
-     * Upload files
-     * @var array
-     */
-    private array $files = [];
 
     /**
      * Constructor
@@ -52,14 +40,12 @@ class Request
      * @return self
      */
     public function __construct(
-        array $files = [],
-        string $requestId = '',
+        private array $files = [],
+        private string $requestId = '',
         string $authToken = '',
         bool $isAdmin = FALSE,
     )
     {
-        $this->setFiles($files)
-             ->setRequestId($requestId);
         $this->authTokenCookie = strtr('{name}={authToken}', [
             '{name}' => $isAdmin ? self::ADMIN_AUTH_TOKEN : self::ACCOUNT_AUTH_TOKEN,
             '{authToken}' => trim($authToken),
@@ -80,18 +66,6 @@ class Request
     }
 
     /**
-     * Set request id
-     *
-     * @param  string $requestId
-     * @return self
-     */
-    public function setRequestId(string $requestId): self
-    {
-        $this->requestId = trim($requestId);
-        return $this;
-    }
-
-    /**
      * Get auth token cookie
      *
      * @return string
@@ -108,32 +82,8 @@ class Request
      */
     public function getFiles(): array
     {
-        return $this->files;
-    }
-
-    /**
-     * Set files
-     *
-     * @param array $files
-     * @return self
-     */
-    public function setFiles(array $files = []): self
-    {
-        $this->files = array_filter(
-            $files, static fn ($file) => ($file instanceof \SplFileInfo && $file->isFile())
+        return array_filter(
+            $this->files, static fn ($file) => ($file instanceof \SplFileInfo && $file->isFile())
         );
-        return $this;
-    }
-
-    /**
-     * Add a file
-     *
-     * @param \SplFileInfo $file
-     * @return self
-     */
-    public function addFile(\SplFileInfo $file)
-    {
-        $this->files[] = $file;
-        return $this;
     }
 }
