@@ -81,13 +81,6 @@ class Client implements LoggerAwareInterface
     private RequestFactoryInterface $requestFactory;
 
     /**
-     * Stream factory
-     * 
-     * @var StreamFactoryInterface
-     */
-    private StreamFactoryInterface $streamFactory;
-
-    /**
      * Http request message
      * 
      * @var RequestInterface
@@ -107,18 +100,15 @@ class Client implements LoggerAwareInterface
      * @param string $uploadUrl
      * @param ClientInterface $httpClient
      * @param RequestFactoryInterface $requestFactory
-     * @param StreamFactoryInterface $streamFactory
      */
     public function __construct(
         private string $uploadUrl = '',
         ?ClientInterface $httpClient = NULL,
-        ?RequestFactoryInterface $requestFactory = NULL,
-        ?StreamFactoryInterface $streamFactory = NULL
+        ?RequestFactoryInterface $requestFactory = NULL
     )
     {
         $this->httpClient = $httpClient ?: Psr18ClientDiscovery::find();
         $this->requestFactory = $requestFactory ?: Psr17FactoryDiscovery::findRequestFactory();
-        $this->streamFactory = $streamFactory ?: Psr17FactoryDiscovery::findStreamFactory();
     }
 
     private function parseResponse(): array
@@ -162,7 +152,7 @@ class Client implements LoggerAwareInterface
             );
         }
 
-        $builder = new MultipartStreamBuilder($this->streamFactory);
+        $builder = new MultipartStreamBuilder();
         $builder->addResource('requestId', $request->getRequestId(), [
             'headers' => [
                 'Content-Type' => self::TEXT_CONTENT_TYPE,
