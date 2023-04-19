@@ -67,13 +67,6 @@ class Client implements LoggerAwareInterface
     ];
 
     /**
-     * Upload url
-     * 
-     * @var string
-     */
-    private string $uploadUrl;
-
-    /**
      * Http client
      * 
      * @var ClientInterface
@@ -117,13 +110,12 @@ class Client implements LoggerAwareInterface
      * @param StreamFactoryInterface $streamFactory
      */
     public function __construct(
-        string $uploadUrl = '',
+        private string $uploadUrl = '',
         ?ClientInterface $httpClient = NULL,
         ?RequestFactoryInterface $requestFactory = NULL,
         ?StreamFactoryInterface $streamFactory = NULL
     )
     {
-        $this->uploadUrl = trim($uploadUrl);
         $this->httpClient = $httpClient ?: Psr18ClientDiscovery::find();
         $this->requestFactory = $requestFactory ?: Psr17FactoryDiscovery::findRequestFactory();
         $this->streamFactory = $streamFactory ?: Psr17FactoryDiscovery::findStreamFactory();
@@ -140,20 +132,16 @@ class Client implements LoggerAwareInterface
             if (!empty($match)) {
                 $data = json_decode($match);
                 if (is_array($data)) {
-                    $attactments = array_map(static function($object) {
-                        $attachmentId = $object->aid ?? '';
-                        $fileName = $object->filename ?? '';
-                        $contentType = $object->ct ?? '';
-                        $size = $object->s ?? 0;
-                        return new Attachment($attachmentId, $fileName, $contentType, $size);
+                    $attactments = array_map(static function($obj) {
+                        return new Attachment(
+                            $obj->aid ?? '', $obj->filename ?? '', $obj->ct ?? '', $obj->s ?? 0
+                        );
                     }, $data);
                 }
                 else {
-                    $attachmentId = $data->aid ?? '';
-                    $fileName = $data->filename ?? '';
-                    $contentType = $data->ct ?? '';
-                    $size = $data->s ?? 0;
-                    $attactments[] = new Attachment($attachmentId, $fileName, $contentType, $size);
+                    $attactments[] = new Attachment(
+                        $data->aid ?? '', $data->filename ?? '', $data->ct ?? '', $data->s ?? 0
+                    );
                 }
             }
         }

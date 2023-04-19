@@ -21,30 +21,6 @@ namespace Zimbra\Upload;
 class Attachment
 {
     /**
-     * Attachment id
-     * @var string
-     */
-    private string $attachmentId;
-
-    /**
-     * File name
-     * @var string
-     */
-    private string $fileName;
-
-    /**
-     * Content type
-     * @var string
-     */
-    private string $contentType;
-
-    /**
-     * Size
-     * @var int
-     */
-    private int $size;
-
-    /**
      * Constructor
      *
      * @param  string $attachmentId
@@ -54,13 +30,12 @@ class Attachment
      * @return self
      */
     public function __construct(
-        string $attachmentId = '', string $fileName = '', string $contentType = '', int $size = 0
+        private string $attachmentId = '',
+        private string $fileName = '',
+        private string $contentType = '',
+        private int $size = 0
     )
     {
-        $this->attachmentId = $attachmentId;
-        $this->fileName = $fileName;
-        $this->contentType = $contentType;
-        $this->size = $size;
     }
 
     /**
