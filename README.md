@@ -3,7 +3,7 @@ Zimbra Upload
 PHP wrapper library around the Zimbra upload service.
 
 ## Requirement
-* PHP >= 7.4.x,
+* PHP >= 8.0,
 * [Http Discovery](https://docs.php-http.org/en/latest/discovery.html) library for finding installed clients and message factories,
 * [Multipart Stream Builder](https://docs.php-http.org/en/latest/components/multipart-stream-builder.html) a builder for Multipart PSR-7 Streams,
 * (optional) PHPUnit to run tests,
