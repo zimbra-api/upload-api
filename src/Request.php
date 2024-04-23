@@ -60,7 +60,7 @@ class Request
     public function getRequestId(): string
     {
         if (empty($this->requestId)) {
-            $this->requestId = uniqid(bin2hex(random_bytes(8)), TRUE);
+            $this->requestId = uniqid(bin2hex(random_bytes(8)), true);
         }
         return $this->requestId;
     }
@@ -83,7 +83,10 @@ class Request
     public function getFiles(): array
     {
         return array_filter(
-            $this->files, static fn ($file) => ($file instanceof \SplFileInfo && $file->isFile())
+            $this->files,
+            static fn ($file) => (
+                $file instanceof \SplFileInfo && $file->isFile()
+            )
         );
     }
 }

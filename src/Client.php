@@ -15,10 +15,18 @@ use Http\Discovery\{
     Psr18ClientDiscovery
 };
 use Http\Message\MultipartStream\MultipartStreamBuilder;
-use Psr\Log\{LoggerAwareInterface, LoggerAwareTrait, LoggerInterface, NullLogger};
+use Psr\Log\{
+    LoggerAwareInterface,
+    LoggerAwareTrait,
+    LoggerInterface,
+    NullLogger
+};
 use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\{
-    RequestFactoryInterface, RequestInterface, ResponseInterface, StreamFactoryInterface
+    RequestFactoryInterface,
+    RequestInterface,
+    ResponseInterface,
+    StreamFactoryInterface
 };
 
 /**
@@ -85,14 +93,14 @@ class Client implements LoggerAwareInterface
      * 
      * @var RequestInterface
      */
-    private ?RequestInterface $httpRequest = NULL;
+    private ?RequestInterface $httpRequest = null;
 
     /**
      * Http response message
      * 
      * @var ResponseInterface
      */
-    private ?ResponseInterface $httpResponse = NULL;
+    private ?ResponseInterface $httpResponse = null;
 
     /**
      * Constructor
@@ -103,12 +111,12 @@ class Client implements LoggerAwareInterface
      */
     public function __construct(
         private string $uploadUrl = '',
-        ?ClientInterface $httpClient = NULL,
-        ?RequestFactoryInterface $requestFactory = NULL
+        ?ClientInterface $httpClient = null,
+        ?RequestFactoryInterface $requestFactory = null
     )
     {
-        $this->httpClient = $httpClient ?: Psr18ClientDiscovery::find();
-        $this->requestFactory = $requestFactory ?: Psr17FactoryDiscovery::findRequestFactory();
+        $this->httpClient = $httpClient ?? Psr18ClientDiscovery::find();
+        $this->requestFactory = $requestFactory ?? Psr17FactoryDiscovery::findRequestFactory();
     }
 
     private function parseResponse(): array
@@ -116,21 +124,31 @@ class Client implements LoggerAwareInterface
         $attactments = [];
         if($this->httpResponse instanceof ResponseInterface) {
             $body = $this->httpResponse->getBody()->getContents();
-            $this->getLogger()->debug(self::RESPONSE_BODY_MESSAGE, ['body' => $body]);
-            preg_match('/\[\{(.*)\}\]/', $body, $matches, PREG_OFFSET_CAPTURE, 3);
-            $match = $matches[0][0] ?? FALSE;
+            $this->getLogger()->debug(
+                self::RESPONSE_BODY_MESSAGE, ['body' => $body]
+            );
+            preg_match(
+                '/\[\{(.*)\}\]/', $body, $matches, PREG_OFFSET_CAPTURE, 3
+            );
+            $match = $matches[0][0] ?? false;
             if (!empty($match)) {
                 $data = json_decode($match);
                 if (is_array($data)) {
                     $attactments = array_map(static function($obj) {
                         return new Attachment(
-                            $obj->aid ?? '', $obj->filename ?? '', $obj->ct ?? '', $obj->s ?? 0
+                            $obj->aid ?? '',
+                            $obj->filename ?? '',
+                            $obj->ct ?? '',
+                            $obj->s ?? 0
                         );
                     }, $data);
                 }
                 else {
                     $attactments[] = new Attachment(
-                        $data->aid ?? '', $data->filename ?? '', $data->ct ?? '', $data->s ?? 0
+                        $data->aid ?? '',
+                        $data->filename ?? '',
+                        $data->ct ?? '',
+                        $data->s ?? 0
                     );
                 }
             }
@@ -159,10 +177,15 @@ class Client implements LoggerAwareInterface
             ]
         ]);
         foreach ($request->getFiles() as $file) {
-            $builder->addResource($file->getFilename(), fopen($file->getRealPath(), 'r'), [
-                'filename' => $file->getFilename(),
-            ]);
-            $this->getLogger()->debug(self::UPLOAD_FILE_MESSAGE, ['file' => $file->getRealPath()]);
+            $builder->addResource(
+                $file->getFilename(), fopen($file->getRealPath(), 'r'),
+                [
+                    'filename' => $file->getFilename(),
+                ]
+            );
+            $this->getLogger()->debug(
+                self::UPLOAD_FILE_MESSAGE, ['file' => $file->getRealPath()]
+            );
         }
 
         $uploadUrl = $this->uploadUrl . '?' . http_build_query(['fmt' => self::QUERY_FORMAT]);
@@ -170,14 +193,24 @@ class Client implements LoggerAwareInterface
             ->createRequest(self::REQUEST_METHOD, $uploadUrl)
             ->withBody($builder->build())
             ->withHeader('Cookie', $request->getAuthTokenCookie())
-            ->withHeader('Content-Type', sprintf(self::MULTIPART_CONTENT_TYPE, $builder->getBoundary()))
-            ->withHeader('User-Agent', $_SERVER['HTTP_USER_AGENT'] ?? self::HTTP_USER_AGENT);
+            ->withHeader(
+                'Content-Type',
+                sprintf(self::MULTIPART_CONTENT_TYPE, $builder->getBoundary())
+            )
+            ->withHeader(
+                'User-Agent',
+                $_SERVER['HTTP_USER_AGENT'] ?? self::HTTP_USER_AGENT
+            );
         if (!empty(self::getOriginatingIp())) {
             foreach (self::$originatingIpHeaders as $header) {
-                $this->httpRequest = $this->httpRequest->withHeader($header, self::getOriginatingIp());
+                $this->httpRequest = $this->httpRequest->withHeader(
+                    $header, self::getOriginatingIp()
+                );
             }
         }
-        $this->httpResponse = $this->httpClient->sendRequest($this->httpRequest);
+        $this->httpResponse = $this->httpClient->sendRequest(
+            $this->httpRequest
+        );
         return $this->parseResponse();
     }
 
@@ -226,7 +259,7 @@ class Client implements LoggerAwareInterface
 
     private static function getOriginatingIp(): ?string
     {
-        static $ip = NULL;
+        static $ip = null;
         if (empty($ip) && !empty($_SERVER)) {
             foreach(self::$serverOriginatingIpHeaders as $header) {
                 if (!empty($_SERVER[$header])) {
