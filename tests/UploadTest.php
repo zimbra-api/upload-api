@@ -2,11 +2,6 @@
 
 namespace Zimbra\Tests;
 
-use Http\Discovery\HttpClientDiscovery;
-use Http\Discovery\Strategy\{
-    DiscoveryStrategy,
-    MockClientStrategy
-};
 use Psr\Log\LoggerInterface;
 use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\{
@@ -22,13 +17,6 @@ use Zimbra\Upload\{Attachment, Client, Request};
  */
 class UploadTest extends ZimbraTestCase
 {
-
-    protected function setUp(): void
-    {
-        parent::setUp();
-        HttpClientDiscovery::prependStrategy(MockClientStrategy::class);
-    }
-
     protected function mockHttpResponse(string $contents): ResponseInterface
     {
         $stream = $this->createStub(StreamInterface::class);

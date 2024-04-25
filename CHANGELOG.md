@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## 3.0.0 - 2024-04-25
+[Full Changelog](https://github.com/zimbra-api/upload-api/compare/2.0.0...3.0.0)
+
+- PHP 8.1.x or later required
+- Use [PSR Discovery](https://github.com/psr-discovery) instead of [Http Discovery](https://docs.php-http.org/en/latest/discovery.html)
+- Remove [Multipart Stream Builder](https://docs.php-http.org/en/latest/components/multipart-stream-builder.html)
+
 ## 2.0.0 - 2023-04-19
 [Full Changelog](https://github.com/zimbra-api/upload-api/compare/1.1.0...2.0.0)
 

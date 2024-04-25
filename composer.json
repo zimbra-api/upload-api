@@ -12,9 +12,9 @@
         }
     ],
     "require": {
-        "php": "^8.0",
-        "php-http/multipart-stream-builder": "^1.0",
-        "psr/http-client": "^1.0",
+        "php": "^8.1",
+        "psr-discovery/http-client-implementations": "^1.0",
+        "psr-discovery/http-factory-implementations": "^1.0",
         "psr/log": "^3.0"
     },
     "require-dev": {

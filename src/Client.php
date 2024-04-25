@@ -10,11 +10,7 @@
 
 namespace Zimbra\Upload;
 
-use Http\Discovery\{
-    Psr17FactoryDiscovery,
-    Psr18ClientDiscovery
-};
-use Http\Message\MultipartStream\MultipartStreamBuilder;
+use PsrDiscovery\Discover;
 use Psr\Log\{
     LoggerAwareInterface,
     LoggerAwareTrait,
@@ -25,8 +21,7 @@ use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\{
     RequestFactoryInterface,
     RequestInterface,
-    ResponseInterface,
-    StreamFactoryInterface
+    ResponseInterface
 };
 
 /**
@@ -79,14 +74,14 @@ class Client implements LoggerAwareInterface
      * 
      * @var ClientInterface
      */
-    private ClientInterface $httpClient;
+    private readonly ClientInterface $httpClient;
 
     /**
      * Request factory
      * 
      * @var RequestFactoryInterface
      */
-    private RequestFactoryInterface $requestFactory;
+    private readonly RequestFactoryInterface $requestFactory;
 
     /**
      * Http request message
@@ -115,8 +110,8 @@ class Client implements LoggerAwareInterface
         ?RequestFactoryInterface $requestFactory = null
     )
     {
-        $this->httpClient = $httpClient ?? Psr18ClientDiscovery::find();
-        $this->requestFactory = $requestFactory ?? Psr17FactoryDiscovery::findRequestFactory();
+        $this->httpClient = $httpClient ?? Discover::httpClient();
+        $this->requestFactory = $requestFactory ?? Discover::httpRequestFactory();
     }
 
     private function parseResponse(): array
@@ -188,7 +183,13 @@ class Client implements LoggerAwareInterface
             );
         }
 
-        $uploadUrl = $this->uploadUrl . '?' . http_build_query(['fmt' => self::QUERY_FORMAT]);
+        $uploadUrl = implode([
+            $this->uploadUrl,
+            '?',
+            http_build_query([
+                'fmt' => self::QUERY_FORMAT,
+            ]),
+        ]);
         $this->httpRequest = $this->requestFactory
             ->createRequest(self::REQUEST_METHOD, $uploadUrl)
             ->withBody($builder->build())

@@ -28,7 +28,7 @@ class Request
      * 
      * @var string
      */
-    private string $authTokenCookie;
+    private readonly string $authTokenCookie;
 
     /**
      * Constructor
@@ -40,8 +40,8 @@ class Request
      * @return self
      */
     public function __construct(
-        private array $files = [],
-        private string $requestId = '',
+        private readonly array $files = [],
+        private readonly string $requestId = '',
         string $authToken = '',
         bool $isAdmin = FALSE,
     )
