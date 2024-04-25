@@ -30,10 +30,10 @@ class Attachment
      * @return self
      */
     public function __construct(
-        private readonly string $attachmentId = '',
-        private readonly string $fileName = '',
-        private readonly string $contentType = '',
-        private readonly int $size = 0
+        private string $attachmentId = '',
+        private string $fileName = '',
+        private string $contentType = '',
+        private int $size = 0
     )
     {
     }

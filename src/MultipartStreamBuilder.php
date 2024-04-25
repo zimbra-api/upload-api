@@ -134,9 +134,9 @@ class MultipartStreamBuilder
         'msg' => 'application/vnd.ms-outlook',
     ];
 
-    private readonly StreamFactoryInterface $streamFactory;
+    private StreamFactoryInterface $streamFactory;
 
-    private readonly string $boundary;
+    private string $boundary;
 
     private array $data = [];
 

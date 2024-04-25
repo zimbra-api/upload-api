@@ -28,7 +28,7 @@ class Request
      * 
      * @var string
      */
-    private readonly string $authTokenCookie;
+    private string $authTokenCookie;
 
     /**
      * Constructor
@@ -40,8 +40,8 @@ class Request
      * @return self
      */
     public function __construct(
-        private readonly array $files = [],
-        private readonly string $requestId = '',
+        private array $files = [],
+        private string $requestId = '',
         string $authToken = '',
         bool $isAdmin = FALSE,
     )
@@ -50,6 +50,9 @@ class Request
             '{name}' => $isAdmin ? self::ADMIN_AUTH_TOKEN : self::ACCOUNT_AUTH_TOKEN,
             '{authToken}' => trim($authToken),
         ]);
+        if (empty($this->requestId)) {
+            $this->requestId = uniqid(bin2hex(random_bytes(8)), true);
+        }
     }
 
     /**
@@ -59,9 +62,6 @@ class Request
      */
     public function getRequestId(): string
     {
-        if (empty($this->requestId)) {
-            $this->requestId = uniqid(bin2hex(random_bytes(8)), true);
-        }
         return $this->requestId;
     }
 
