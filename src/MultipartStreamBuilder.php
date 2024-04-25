@@ -11,8 +11,10 @@
 namespace Zimbra\Upload;
 
 use PsrDiscovery\Discover;
-use Psr\Http\Message\StreamInterface;
-use Psr\Http\Message\StreamFactoryInterface;
+use Psr\Http\Message\{
+    StreamInterface,
+    StreamFactoryInterface,
+};
 
 /**
  * Multipart stream class in Zimbra Upload API.
